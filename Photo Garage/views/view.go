@@ -16,7 +16,7 @@ type View struct {
 // Variables used in layoutFiles function
 var (
 	LayoutDir   string = "views/layouts/"
-	TemplateDir string = "views/	"
+	TemplateDir string = "views/"
 	TemplateExt string = ".gohtml"
 )
 
@@ -29,11 +29,28 @@ func layoutFiles() []string {
 	return files
 }
 
+// Add the prefix "views/"
+func addTemplatePath(files []string) {
+	for i, f := range files {
+		files[i] = TemplateDir + f
+	}
+}
+
+// Add the suffix ".gohtml"
+func addTemplateExt(files []string) {
+	for i, f := range files {
+		files[i] = f + TemplateExt
+	}
+}
+
 // Create a new View storing the parsed template ready to be template-execute
 func NewView(layout string, files ...string) *View {
+	// Add the prefix and the suffix
+	addTemplatePath(files)
+	addTemplateExt(files)
 
 	// The slice of string variables: "files" - is used to hold names of
-	// the template we need to use in ParseFiles function below including and also layouts
+	// the template we need to use in ParseFiles function below including layouts
 	files = append(files, layoutFiles()...)
 
 	// Parse all the files we collect and store it in variable "t"
