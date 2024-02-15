@@ -26,7 +26,7 @@ type LoginForm struct {
 	Password string `schema:"password"`
 }
 
-// handle setting up all the views our users controller will need for user
+// Setup cac view danh cho user
 func NewUsers(us models.UserServices) *Users {
 	return &Users{
 		NewView:   views.NewView("bootstrap", "users/new"),
@@ -35,12 +35,12 @@ func NewUsers(us models.UserServices) *Users {
 	}
 }
 
-// Create page by rendering the NewView we create above
+// Tao trang dang ky tai khoan
 func (u *Users) New(w http.ResponseWriter, r *http.Request) {
 	u.NewView.Render(w, r, nil)
 }
 
-// function to submit Login form
+// function submit login
 func (u *Users) Login(w http.ResponseWriter, r *http.Request) {
 	var vd views.Data
 	var form LoginForm
@@ -69,7 +69,7 @@ func (u *Users) Login(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/galleries", http.StatusFound)
 }
 
-// function to submit the signup form - meaning create a new user
+// submit form dang ky tai khoan
 func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
 	var vd views.Data
 	var form SignupForm
@@ -110,6 +110,7 @@ func (u *Users) CookieTest(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, user)
 }
 
+// function dang nhap
 func (u *Users) signIn(w http.ResponseWriter, user *models.User) error {
 	if user.Remember == "" {
 		token, err := rand.RememberToken()

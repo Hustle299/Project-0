@@ -154,17 +154,14 @@ func (g *Galleries) Update(w http.ResponseWriter, r *http.Request) {
 	vd.Yield = gallery
 	var form GalleryForm
 	if err := parseForm(r, &form); err != nil {
-		// If there is an error we are going to render the
-		// EditView again with an alert message.
+		//Quay lai edit view neu co loi
 		vd.SetAlert(err)
 		g.EditView.Render(w, r, vd)
 		return
 	}
 	gallery.Title = form.Title
 	err = g.gs.Update(gallery)
-	// If there is an error our alert will be an error. Otherwise
-	// we will still render an alert, but instead it will be
-	// a success message.
+
 	if err != nil {
 		vd.SetAlert(err)
 	} else {
@@ -173,23 +170,19 @@ func (g *Galleries) Update(w http.ResponseWriter, r *http.Request) {
 			Message: "Gallery successfully updated!",
 		}
 	}
-	// Error or not, we are going to render the EditView with
-	// our updated information.
+	//Render editview
 	g.EditView.Render(w, r, vd)
 }
 
 func (g *Galleries) Delete(w http.ResponseWriter, r *http.Request) {
-	// Lookup the gallery using the galleryByID we wrote earlier
+	// Tim gallery bang function galleryByID
 	gallery, err := g.galleryByID(w, r)
 	if err != nil {
-		// If there is an error the galleryByID will have rendered
-		// it for us already.
+
 		return
 	}
-	// We also need to retrieve the user and verify they have
-	// permission to delete this gallery. This means we will
-	// need to use the RequireUser middleware on any routes
-	// mapped to this method.
+	//dung middleware kiem tra user co quyenn khong
+
 	user := context.User(r.Context())
 	if gallery.UserID != user.ID {
 		http.Error(w, "You do not have permission to edit "+
@@ -199,16 +192,13 @@ func (g *Galleries) Delete(w http.ResponseWriter, r *http.Request) {
 	var vd views.Data
 	err = g.gs.Delete(gallery.ID)
 	if err != nil {
-		// If there is an error we want to set an alert and
-		// render the edit page with the error. We also need
-		// to set the Yield to gallery so that the EditView
-		// is rendered correctly.
+
 		vd.SetAlert(err)
 		vd.Yield = gallery
 		g.EditView.Render(w, r, vd)
 		return
 	}
-	// redirect to the index page
+	// redirect ve index page
 	url, err := g.r.Get(IndexGalleries).URL()
 	if err != nil {
 		http.Redirect(w, r, "/", http.StatusFound)
@@ -232,7 +222,7 @@ func (g *Galleries) Index(w http.ResponseWriter, r *http.Request) {
 	g.IndexView.Render(w, r, vd)
 }
 
-// POST galleries/:id/images (upload image)
+// POST galleries/:id/images (tai anh len)
 func (g *Galleries) ImageUpload(w http.ResponseWriter, r *http.Request) {
 	gallery, err := g.galleryByID(w, r)
 	if err != nil {
@@ -247,13 +237,13 @@ func (g *Galleries) ImageUpload(w http.ResponseWriter, r *http.Request) {
 	vd.Yield = gallery
 	err = r.ParseMultipartForm(maxMultipartMem)
 	if err != nil {
-		// If we can't parse the form just render an error alert on the// edit gallery page.
+		// neu khong th parse form thi render error
 		vd.SetAlert(err)
 		g.EditView.Render(w, r, vd)
 		return
 	}
 
-	//iterates over uploaded file
+	//gom toan bo file anh
 	files := r.MultipartForm.File["images"]
 	for _, f := range files {
 		file, err := f.Open()
@@ -290,23 +280,23 @@ func (g *Galleries) ImageDelete(w http.ResponseWriter, r *http.Request) {
 			"this gallery or image", http.StatusForbidden)
 		return
 	}
-	// Get the filename from the path
+	// lay ten file tu URL
 	filename := mux.Vars(r)["filename"]
 	// Build the Image model
 	i := models.Image{Filename: filename,
 		GalleryID: gallery.ID,
 	}
-	// Try to delete the image.
+	// delete anh
 	err = g.is.Delete(&i)
 	if err != nil {
-		// Render the edit page with any errors.
+		// Render edit page
 		var vd views.Data
 		vd.Yield = gallery
 		vd.SetAlert(err)
 		g.EditView.Render(w, r, vd)
 		return
 	}
-	// If all goes well, redirect to the edit gallery page.
+	//  redirect ve edit gallery
 	url, err := g.r.Get(EditGallery).URL("id", fmt.Sprintf("%v", gallery.ID))
 	if err != nil {
 		http.Redirect(w, r, "/galleries", http.StatusFound)

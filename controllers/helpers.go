@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/schema"
 )
 
-// This function is used to post the form, the dst interface
+// Function dung de post form
 func parseForm(r *http.Request, dst interface{}) error {
 	if err := r.ParseForm(); err != nil {
 		return err

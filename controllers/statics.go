@@ -9,7 +9,7 @@ type Static struct {
 	Contact *views.View
 }
 
-// Function to serve static resource like homepage and contact page through NewView function in view folder
+// Function load cac trang tinh, khong thay doi
 func NewStatic() *Static {
 	return &Static{
 		Home:    views.NewView("bootstrap", "statics/homepage"),
