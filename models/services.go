@@ -4,6 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+// tao services cho tung loai
 func NewServices(connectionInfo string) (*Services, error) {
 	db, err := gorm.Open("postgres", connectionInfo)
 	if err != nil {

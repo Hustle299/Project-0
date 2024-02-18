@@ -10,23 +10,23 @@ import (
 	"github.com/Hustle299/Project-0/context"
 )
 
-// This file is to render out a new view combining the main page and the layouts
+// Render ra 1 page bang file chinh va cac layout
 
-// A struct to hold a View consist of a template and layouts which later on will
-// be passed variables in NewView function below to create a page
+// Struct giu 1 template va cac layout
+// dung NewView function de tao 1 trang
 type View struct {
 	Template *template.Template
 	Layout   string
 }
 
-// Variables used in layoutFiles function
+// Variables su dung layoutFiles function
 var (
 	LayoutDir   string = "views/layouts/"
 	TemplateDir string = "views/"
 	TemplateExt string = ".gohtml"
 )
 
-// This function is used to collect all layout gohtml files in layout folder
+// gom toan bo file layout
 func layoutFiles() []string {
 	files, err := filepath.Glob(LayoutDir + "*" + TemplateExt)
 	if err != nil {
@@ -35,23 +35,23 @@ func layoutFiles() []string {
 	return files
 }
 
-// Add the prefix "views/"
+// them dau "views/"
 func addTemplatePath(files []string) {
 	for i, f := range files {
 		files[i] = TemplateDir + f
 	}
 }
 
-// Add the suffix ".gohtml"
+// them duoi".gohtml"
 func addTemplateExt(files []string) {
 	for i, f := range files {
 		files[i] = f + TemplateExt
 	}
 }
 
-// Create a new View storing the parsed template ready to be template-execute
+// Tao 1 View chua template de dung ham template excecute
 func NewView(layout string, files ...string) *View {
-	// Add the prefix and the suffix
+	// Add dau duoi
 	addTemplatePath(files)
 	addTemplateExt(files)
 
@@ -92,7 +92,7 @@ func (v *View) Render(w http.ResponseWriter, r *http.Request, data interface{}) 
 	err := v.Template.ExecuteTemplate(&buf, v.Layout, vd)
 	if err != nil {
 		http.Error(w, "Something went wrong. If the problem "+
-			"persists, please email support@lenslocked.com",
+			"persists, please email teo2992001@gmail.com",
 			http.StatusInternalServerError)
 		return
 	}

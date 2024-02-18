@@ -18,8 +18,7 @@ type HMAC struct {
 	hmac hash.Hash
 }
 
-// Hash will hash the provided input string using HMAC with
-// the secret key provided when the HMAC object was created
+// Hash mat khau
 func (h HMAC) Hash(input string) string {
 	h.hmac.Reset()
 	h.hmac.Write([]byte(input))

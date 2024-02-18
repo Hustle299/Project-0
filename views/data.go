@@ -2,8 +2,8 @@ package views
 
 import (
 	"log"
-	"github.com/Hustle299/Project-0/models"
 
+	"github.com/Hustle299/Project-0/models"
 )
 
 const (
@@ -15,14 +15,14 @@ const (
 		"again, and contact us if the problem persists."
 )
 
-// Data is the top level structure that views expect data to come in
+// Data truyen vao views
 type Data struct {
 	Alert *Alert
 	User  *models.User
 	Yield interface{}
 }
 
-// Alert is used to render Bootstrap message in template
+// Alert render Bootstrap template
 type Alert struct {
 	Level   string
 	Message string
