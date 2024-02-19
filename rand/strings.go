@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 )
 
-// Take in an integer n and create a slice length n, Read fills it with random byte
+// Nhan 1 integer n va tao slice do dai n, Read fills it with random byte
 func Bytes(n int) ([]byte, error) {
 	b := make([]byte, n)
 	_, err := rand.Read(b)
@@ -14,10 +14,6 @@ func Bytes(n int) ([]byte, error) {
 	}
 	return b, nil
 }
-
-// String will generate a byte slice of size nBytes and then
-// return a string that is the base64 URL encoded version
-// of that byte slice
 
 func String(nBytes int) (string, error) {
 	b, err := Bytes(nBytes)
@@ -29,7 +25,7 @@ func String(nBytes int) (string, error) {
 
 const RememberTokenBytes = 32
 
-// RememberToken is a helper function designed to generate remember tokens of a predetermined byte size.
+// RememberToken tao ra 1 remember token voi size 32
 func RememberToken() (string, error) {
 	return String(RememberTokenBytes)
 }

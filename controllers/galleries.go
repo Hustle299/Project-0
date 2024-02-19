@@ -46,7 +46,7 @@ type GalleryForm struct {
 	Title string `schema:"title"`
 }
 
-// function submitform tao 1 galleries moi (POST /galleries).
+// function submit form tao 1 galleries moi (POST /galleries).
 // su dung parseForm function truyen data tu web request vao GalleryForm tao o tren
 func (g *Galleries) Create(w http.ResponseWriter, r *http.Request) {
 	var vd views.Data

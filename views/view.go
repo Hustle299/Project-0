@@ -55,11 +55,10 @@ func NewView(layout string, files ...string) *View {
 	addTemplatePath(files)
 	addTemplateExt(files)
 
-	// The slice of string variables: "files" - is used to hold names of
-	// the template we need to use in ParseFiles function below including layouts
+	//gom toan bo vao 1 slice
 	files = append(files, layoutFiles()...)
 
-	// Parse all the files we collect and store it in variable "t"
+	// Truyen tat ca phai va luu vao bien "t"
 	t, err := template.ParseFiles(files...)
 	if err != nil {
 		panic(err)
@@ -70,23 +69,22 @@ func NewView(layout string, files ...string) *View {
 	}
 }
 
-// Excecute the "View" we create in the NewView function
+// Excecute view da tao
 func (v *View) Render(w http.ResponseWriter, r *http.Request, data interface{}) {
 	w.Header().Set("Content-Type", "text/html")
 	var vd Data
 	switch d := data.(type) {
 	case Data:
-		// We need to do this so we can access the data in a var
-		// with the type Data.
+
 		vd = d
 	default:
-		// If the data IS NOT of the type Data, we create one
-		// and set the data to the Yield field like before.
+
 		vd = Data{
 			Yield: data,
 		}
 	}
-	// Lookup and set the user to the User field
+	// Context user
+	// de hieu hon thi doc lai file context :))) dm kho nho qua
 	vd.User = context.User(r.Context())
 	var buf bytes.Buffer
 	err := v.Template.ExecuteTemplate(&buf, v.Layout, vd)

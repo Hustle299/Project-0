@@ -35,24 +35,24 @@ var (
 )
 
 type UserDB interface {
-	//Methods to query 1 user
+	//Methods tim 1 user
 	ByID(id uint) (*User, error)
 	ByEmail(email string) (*User, error)
 	ByRemember(token string) (*User, error)
 
-	//Methods to change user data
+	//Methods thay doi du lieu
 	Create(user *User) error
 	Update(user *User) error
 	Delete(id uint) error
 }
 
-// userGorm represents our database interaction layer
-// and implements the UserDB interface fully.
+// userGorm tuong tac truc tiep voi DB
+
 type userGorm struct {
 	db *gorm.DB
 }
 
-// The User in this package represent the data we store in our server
+// Struct chua toan bo du lieu lien quan den 1 user
 type User struct {
 	gorm.Model
 	Name         string
@@ -63,8 +63,7 @@ type User struct {
 	RememberHash string `gorm:"not null; unique index"`
 }
 
-// UserServices is an abstraction layer (a thing that will perform action that we dont need to know how) that will
-// perform all kind of queries to our database
+// UserServices la layer cao nhat
 
 type UserServices interface {
 	Authenticate(email, password string) (*User, error)
@@ -83,7 +82,7 @@ func NewUserService(db *gorm.DB) UserServices {
 	}
 }
 
-// method to query user by ID
+// method tim user bang ID
 func (ug *userGorm) ByID(id uint) (*User, error) {
 	var user User
 	db := ug.db.Where("id = ?", id)
@@ -94,8 +93,7 @@ func (ug *userGorm) ByID(id uint) (*User, error) {
 	return &user, nil
 }
 
-// Create will create the provided user and backfill data
-// like the ID, CreatedAt, and UpdatedAt fields.
+// Create tao ra 1 user va luu vao DB
 func (uv *userValidator) Create(user *User) error {
 	err := runUserValFns(user,
 		uv.passwordRequired,
@@ -116,12 +114,11 @@ func (uv *userValidator) Create(user *User) error {
 	return uv.UserDB.Create(user)
 }
 
-// And now the userGorm version becomes...
 func (ug *userGorm) Create(user *User) error {
 	return ug.db.Create(user).Error
 }
 
-// helper function first
+// helper function first de tim ra 1 user voi ID
 func first(db *gorm.DB, dst interface{}) error {
 	err := db.First(dst).Error
 	if err == gorm.ErrRecordNotFound {
@@ -130,7 +127,7 @@ func first(db *gorm.DB, dst interface{}) error {
 	return err
 }
 
-// method to query by email
+// method tim user bang email
 func (ug *userGorm) ByEmail(email string) (*User, error) {
 	var user User
 	db := ug.db.Where("email = ?", email)
@@ -138,7 +135,7 @@ func (ug *userGorm) ByEmail(email string) (*User, error) {
 	return &user, err
 }
 
-// Update will hash a remember token if it is provided.
+// Update se hash remember token neu co
 func (uv *userValidator) Update(user *User) error {
 	err := runUserValFns(user,
 		uv.passwordMinLength,
@@ -160,7 +157,7 @@ func (ug *userGorm) Update(user *User) error {
 	return ug.db.Save(user).Error
 }
 
-// Delete will delete the user with the provided ID
+// Delete
 func (uv *userValidator) Delete(id uint) error {
 	var user User
 	user.ID = id
@@ -175,7 +172,7 @@ func (ug *userGorm) Delete(id uint) error {
 	return ug.db.Delete(&user).Error
 }
 
-// Authenticate can be used to authenticate a user
+// Authenticate
 func (us *userServices) Authenticate(email, password string) (*User, error) {
 	foundUser, err := us.ByEmail(email)
 	if err != nil {
@@ -196,8 +193,8 @@ func (us *userServices) Authenticate(email, password string) (*User, error) {
 	}
 }
 
-// ByRemember looks up a user with the given remember token and returns that user. This method will handle hashing
-// the token for us. Errors are the same as ByEmail.
+// ByRemember tim user voi remember token
+// Hash token
 func (ug *userGorm) ByRemember(rememberHash string) (*User, error) {
 	var user User
 	err := first(ug.db.Where("remember_hash = ?", rememberHash), &user)
@@ -223,12 +220,10 @@ func (uv *userValidator) ByRemember(token string) (*User, error) {
 	return uv.UserDB.ByRemember(user.RememberHash)
 }
 
-// bcryptPassword will hash a user's password with an
-// app-wide pepper and bcrypt, which salts for us.
+// Ma hoa mat khau
 func (uv *userValidator) bcryptPassword(user *User) error {
 	if user.Password == "" {
-		// We DO NOT need to run this if the password
-		// hasn't been changed.
+
 		return nil
 	}
 	pwBytes := []byte(user.Password + userPwPepper)
@@ -382,7 +377,7 @@ func (uv *userValidator) rememberHashRequired(user *User) error {
 	return nil
 }
 
-// type to hold error of models
+// type to de luu tru error
 type modelError string
 
 func (e modelError) Error() string {

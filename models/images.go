@@ -7,16 +7,12 @@ import (
 	"path/filepath"
 )
 
-// Image is used to represent images stored in a Gallery.
-// Image is NOT stored in the database, and instead
-// references data stored on disk.
 type Image struct {
 	GalleryID uint
 	Filename  string
 }
 
-// Path is used to build the absolute path used to reference this image
-// via a web request.
+// Duong dan den anh
 func (i *Image) Path() string {
 	return "/" + i.RelativePath()
 }
@@ -52,13 +48,13 @@ func (is *imageService) Create(galleryID uint, r io.Reader, filename string) err
 	if err != nil {
 		return err
 	}
-	// Create a destination file
+	// Tao duong dan diem den cuoi
 	dst, err := os.Create(filepath.Join(path, filename))
 	if err != nil {
 		return err
 	}
 	defer dst.Close()
-	// Copy reader data to the destination file
+	// Copy reader data den destination file
 	_, err = io.Copy(dst, r)
 	if err != nil {
 		return err
@@ -66,7 +62,7 @@ func (is *imageService) Create(galleryID uint, r io.Reader, filename string) err
 	return nil
 }
 
-// create the path to image stored
+// tao duong dan de luu tru anh
 func (is *imageService) mkImagePath(galleryID uint) (string, error) {
 	galleryPath := is.imagePath(galleryID)
 	err := os.MkdirAll(galleryPath, 0755)
@@ -83,7 +79,7 @@ func (is *imageService) ByGalleryID(galleryID uint) ([]Image, error) {
 	if err != nil {
 		return nil, err
 	}
-	// Setup the Image slice we are returning
+	// Setup Image slice can tim
 	ret := make([]Image, len(strings))
 	for i, imgStr := range strings {
 		ret[i] = Image{
