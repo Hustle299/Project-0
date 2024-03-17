@@ -49,7 +49,7 @@ func addTemplateExt(files []string) {
 	}
 }
 
-// Tao 1 View chua template de dung ham template excecute
+// Tao 1 View instance chua template de dung ham template excecute
 func NewView(layout string, files ...string) *View {
 	// Add dau duoi
 	addTemplatePath(files)
@@ -97,6 +97,7 @@ func (v *View) Render(w http.ResponseWriter, r *http.Request, data interface{}) 
 	io.Copy(w, &buf)
 }
 
+// dung cho middleware
 func (v *View) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	v.Render(w, r, nil)
 }
