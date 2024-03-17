@@ -62,7 +62,7 @@ func (is *imageService) Create(galleryID uint, r io.Reader, filename string) err
 	return nil
 }
 
-// tao duong dan de luu tru anh
+// tao duong dan den thu muc luu tru anh theo ID gallery
 func (is *imageService) mkImagePath(galleryID uint) (string, error) {
 	galleryPath := is.imagePath(galleryID)
 	err := os.MkdirAll(galleryPath, 0755)
@@ -70,9 +70,9 @@ func (is *imageService) mkImagePath(galleryID uint) (string, error) {
 		return "", err
 	}
 	return galleryPath, nil
-
-	//search toan bo anh cua gallery mang ID nay
 }
+
+// search toan bo anh cua gallery mang ID nay
 func (is *imageService) ByGalleryID(galleryID uint) ([]Image, error) {
 	path := is.imagePath(galleryID)
 	strings, err := filepath.Glob(filepath.Join(path, "*"))
